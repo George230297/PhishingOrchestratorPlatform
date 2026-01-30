@@ -29,8 +29,8 @@ class Campaign(Base):
     org_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
     name: Mapped[Optional[str]] = mapped_column(String(255))
     template_id: Mapped[Optional[int]] = mapped_column(ForeignKey("templates.id"))
-    start_date: Mapped[Optional[datetime]] = mapped_column(DateTime)
-    end_date: Mapped[Optional[datetime]] = mapped_column(DateTime)
+    start_date: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    end_date: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
     is_anonymous_reporting: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationships
@@ -68,7 +68,7 @@ class CampaignEvent(Base):
     user_agent: Mapped[Optional[str]] = mapped_column(Text)
     os_fingerprint: Mapped[Optional[str]] = mapped_column(String(100))
     browser_fingerprint: Mapped[Optional[str]] = mapped_column(String(100))
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
     dispatch: Mapped["CampaignDispatch"] = relationship(back_populates="events")
@@ -81,7 +81,7 @@ class CapturedCredential(Base):
     username_entered: Mapped[Optional[str]] = mapped_column(String(255))
     password_hash: Mapped[str] = mapped_column(String(512), nullable=False)
     was_password_leaked: Mapped[bool] = mapped_column(Boolean, default=True)
-    captured_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    captured_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
     dispatch: Mapped["CampaignDispatch"] = relationship(back_populates="credentials")

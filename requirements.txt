@@ -8,3 +8,7 @@ celery[redis]
 aiosmtplib
 python-multipart
 email-validator
+passlib[bcrypt]
+pytest
+pytest-asyncio
+asgiref

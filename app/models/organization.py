@@ -2,7 +2,7 @@ from typing import List, Optional
 from datetime import datetime
 from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.db.base import Base
+from app.core.database import Base
 
 class Organization(Base):
     __tablename__ = "organizations"

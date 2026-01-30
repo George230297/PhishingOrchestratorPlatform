@@ -17,7 +17,7 @@ El objetivo principal es educativo y preventivo. La herramienta ayuda a:
   - Apertura de correo (Tracking Pixel).
   - Clic en enlaces (Landing Page).
   - Envío de credenciales (Captura de datos).
-- **Captura Segura**: Las credenciales capturadas se **hashean inmediatamente** (SHA-256) y nunca se almacenan en texto plano, garantizando la privacidad y seguridad, incluso en simulaciones.
+- **Captura Segura**: Las credenciales capturadas se **hashean inmediatamente** (usando bcrypt/Argon2 via Passlib) y nunca se almacenan en texto plano, garantizando la privacidad y seguridad, incluso en simulaciones.
 - **Educación "Just-in-Time"**: Redirección automática a una página educativa cuando un usuario compromete sus credenciales.
 - **Infraestructura Robusta**: Uso de colas de tareas asíncronas para el envío masivo de correos y la rotación de IPs.
 
@@ -38,26 +38,82 @@ Antes de comenzar, asegúrate de tener instalado:
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## 🚀 Instalación y Uso
+## 🚀 Instalación y Uso (Docker)
 
-1.  **Clonar el repositorio** (si aplica) o navegar al directorio del proyecto.
+La forma recomendada de desplegar la aplicación es utilizando Docker Compose.
 
-2.  **Configurar Variables de Entorno**:
-    Asegúrate de revisar el archivo `docker-compose.yml` y configurar cualquier variable necesaria (aunque el proyecto viene con valores por defecto para desarrollo local).
+1.  **Clonar el repositorio**:
 
-3.  **Iniciar la Aplicación**:
-    Ejecuta el siguiente comando en la raíz del proyecto para construir e iniciar los servicios:
+    ```bash
+    git clone https://github.com/tu-usuario/phishing-orchestrator-platform.git
+    cd phishing-orchestrator-platform
+    ```
 
+2.  **Configuración de Entorno**:
+    Es **CRÍTICO** configurar las variables de entorno antes de iniciar.
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Edita el archivo `.env` y define contraseñas seguras para:
+    - `POSTGRES_PASSWORD`
+    - `SECRET_KEY` (si aplica en el futuro)
+
+3.  **Iniciar Servicios**:
     ```bash
     docker-compose up --build -d
     ```
 
-4.  **Verificar Estado**:
+## 💻 Desarrollo Local
+
+Si deseas ejecutar la aplicación localmente para desarrollo:
+
+1.  **Preparar Entorno Virtual**:
+
+    ```bash
+    python -m venv venv
+    # Windows
+    .\venv\Scripts\activate
+    # Linux/Mac
+    source venv/bin/activate
+    ```
+
+2.  **Instalar Dependencias**:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Iniciar Dependencias (DB & Redis)**:
+    Puedes usar Docker solo para la infraestructura:
+
+    ```bash
+    docker-compose up -d db redis
+    ```
+
+4.  **Ejecutar Aplicación**:
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+
+## 🧪 Pruebas
+
+Para verificar que todo funciona correctamente, ejecuta la suite de pruebas:
+
+1.  Asegúrate de tener las dependencias instaladas y el archivo `.env` configurado.
+2.  Ejecuta `pytest`:
+
+    ```bash
+    pytest
+    ```
+
+3.  **Verificar Estado**:
     Los servicios principales estarán disponibles en:
     - **API Backend**: `http://localhost:8000` (o a través de Traefik en `http://localhost` / `https://localhost`)
     - **Traefik Dashboard**: `http://localhost:8080` (si está habilitado insecure mode)
 
-5.  **Documentación de la API**:
+4.  **Documentación de la API**:
     Para ver y probar los endpoints disponibles, visita la documentación interactiva generada automáticamente por Swagger UI:
     - URL: `http://localhost:8000/docs`
 

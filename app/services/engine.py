@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import select, update, func, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.infrastructure import SendingNode
@@ -32,7 +32,7 @@ class RotationEngine:
             .where(SendingNode.id == node_id)
             .values(
                 current_daily_sends=SendingNode.current_daily_sends + 1,
-                last_used_at=datetime.utcnow()
+                last_used_at=datetime.now(timezone.utc)
             )
         )
         await self.session.execute(stmt)

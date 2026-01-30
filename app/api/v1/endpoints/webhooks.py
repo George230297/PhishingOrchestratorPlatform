@@ -2,8 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.api import deps
-from app.models.campaign import CampaignDispatch
-from app.models.execution import CampaignEvent
+from app.models.campaign import CampaignDispatch, CampaignEvent
 from app.models.enums import EventTypeEnum
 
 router = APIRouter()

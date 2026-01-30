@@ -5,11 +5,12 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True)
 
     # Database Settings
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "password"
-    POSTGRES_SERVER: str = "db"
+    # Database Settings
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str
     POSTGRES_PORT: int = 5432
-    POSTGRES_DB: str = "phishing_simulator"
+    POSTGRES_DB: str
 
     # Redis Settings
     REDIS_HOST: str = "redis"

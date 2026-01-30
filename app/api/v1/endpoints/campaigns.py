@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import deps
 from app.schemas.campaign import CampaignCreate, CampaignResponse, CampaignDetailResponse
 from app.models.campaign import Campaign, CampaignDispatch, Template
-from app.models.execution import CampaignEvent
+from app.models.campaign import CampaignEvent
 from app.models.organization import Target
 from app.services.anonymizer import sanitize_report_data
 from workers.tasks import send_phishing_email
