@@ -125,3 +125,22 @@ Para verificar que todo funciona correctamente, ejecuta la suite de pruebas:
 ## 🤝 Contribuir
 
 Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request para mejoras o correcciones.
+
+## ✨ Mejoras Recientes
+
+### Implementación del Patrón Builder para Campañas
+
+Se ha introducido la clase `CampaignBuilder` (`app/services/campaign_builder.py`) para facilitar la creación de campañas de phishing complejas de manera programática y segura.
+
+**Características:**
+
+- **Interfaz Fluida**: Configuración encadenable (`.set_name()`, `.select_template()`, etc.).
+- **Validación de Integridad**: Garantiza que no se creen campañas incompletas o inválidas antes de persistir en la base de datos.
+- **Gestión Automatizada**: Maneja la creación de la campaña y la asignación inicial de objetivos (dispatches) en una sola transacción.
+
+### Robustez en Pruebas Automatizadas
+
+Se ha mejorado la suite de pruebas unitarias (`tests/`):
+
+- **Independencia de Entorno**: Los tests ahora verifican dinámicamente la configuración del entorno, asegurando que pasen tanto en entornos de desarrollo local como en pipelines de CI/CD.
+- **Mocking Preciso**: Corrección de advertencias y errores en pruebas asíncronas mediante el uso adecuado de mocks para operaciones de base de datos síncronas y asíncronas.
