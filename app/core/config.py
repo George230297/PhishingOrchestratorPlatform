@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import PostgresDsn, computed_field
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True)
+    model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True, extra="ignore")
 
     # Database Settings
     # Database Settings
@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     # Redis Settings
     REDIS_HOST: str = "redis"
     REDIS_PORT: int = 6379
+
+    # Security
+    SECRET_KEY: str
 
     @computed_field
     def SQLALCHEMY_DATABASE_URI(self) -> str:

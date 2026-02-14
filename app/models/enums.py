@@ -18,3 +18,8 @@ class HealthStatusEnum(str, enum.Enum):
     HEALTHY = "HEALTHY"
     BURNED = "BURNED"
     WARMUP = "WARMUP"
+
+class SubscriptionPlanEnum(str, enum.Enum):
+    FREE = "FREE"
+    PRO = "PRO"
+    ENTERPRISE = "ENTERPRISE"

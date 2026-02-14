@@ -1,6 +1,7 @@
 from typing import List, Optional
 from datetime import datetime
-from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, func
+from app.models.enums import SubscriptionPlanEnum
+from sqlalchemy import String, Integer, Boolean, DateTime, ForeignKey, func, Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
@@ -9,7 +10,7 @@ class Organization(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    subscription_plan: Mapped[Optional[str]] = mapped_column(String(50))
+    subscription_plan: Mapped[SubscriptionPlanEnum] = mapped_column(SAEnum(SubscriptionPlanEnum), default=SubscriptionPlanEnum.FREE)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     # Relationships

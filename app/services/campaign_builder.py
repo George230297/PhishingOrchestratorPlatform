@@ -16,6 +16,7 @@ class CampaignBuilder:
         self.template_id: Optional[int] = None
         self.target_ids: List[int] = []
         self.use_attachment: bool = False
+        self.template_name: Optional[str] = None
         
         # Internal state
         self._template: Optional[Template] = None
@@ -73,7 +74,7 @@ class CampaignBuilder:
             raise CampaignBuilderException("Organization ID is required.")
         if not self.target_ids:
             raise CampaignBuilderException("No targets selected.")
-        if not hasattr(self, 'template_name') or not self.template_name:
+        if not self.template_name:
              raise CampaignBuilderException("Template must be selected.")
 
         # 2. Async Validation / Resolution

@@ -45,7 +45,7 @@ La forma recomendada de desplegar la aplicación es utilizando Docker Compose.
 1.  **Clonar el repositorio**:
 
     ```bash
-    git clone https://github.com/tu-usuario/phishing-orchestrator-platform.git
+    git clone https://github.com/George230297/phishing-orchestrator-platform.git
     cd phishing-orchestrator-platform
     ```
 
@@ -144,3 +144,105 @@ Se ha mejorado la suite de pruebas unitarias (`tests/`):
 
 - **Independencia de Entorno**: Los tests ahora verifican dinámicamente la configuración del entorno, asegurando que pasen tanto en entornos de desarrollo local como en pipelines de CI/CD.
 - **Mocking Preciso**: Corrección de advertencias y errores en pruebas asíncronas mediante el uso adecuado de mocks para operaciones de base de datos síncronas y asíncronas.
+
+### Mejoras de Seguridad y Estabilidad (v1.1)
+
+- **Configuración Validada**: Se ha reforzado la validación de variables de entorno con Pydantic, ignorando variables extrañas y asegurando la presencia de `SECRET_KEY`.
+- **Hashing con Argon2**: Se ha migrado el algoritmo de hashing de contraseñas capturadas de `bcrypt` a `Argon2` (vía `passlib`), ofreciendo mayor resistencia a ataques de fuerza bruta modernos y mejor compatibilidad.
+- **Registro Real de IPs**: El sistema ahora respeta los encabezados `X-Forwarded-For`, permitiendo registrar la dirección IP real de las víctimas incluso cuando la aplicación corre detrás de proxies o balanceadores de carga (como Traefik/Docker).
+- **Tipado Fuerte en Modelos**: Uso de Enums (`SubscriptionPlanEnum`) en modelos de base de datos para garantizar la integridad de los datos.
+
+## 🚀 Instalación y Ejecución Rápida
+
+### Requisitos
+
+- Python 3.10+
+- Docker & Docker Compose (Opcional, para DB/Redis)
+
+### Pasos
+
+1.  **Clonar y configurar entorno**:
+
+    ```bash
+    git clone https://github.com/tu-usuario/phishing-orchestrator-platform.git
+    cd phishing-orchestrator-platform
+    python -m venv .venv
+    # Windows
+    .\.venv\Scripts\activate
+    # Linux/Mac
+    source .venv/bin/activate
+    ```
+
+2.  **Instalar dependencias**:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Configurar variables de entorno**:
+
+    ```bash
+    cp .env.example .env
+    # Editar .env y establecer SECRET_KEY, POSTGRES_USER, etc.
+    ```
+
+4.  **Iniciar servicios auxiliares (DB & Redis)**:
+
+    ```bash
+    docker-compose up -d db redis
+    ```
+
+5.  **Ejecutar la aplicación**:
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+    La API estará disponible en `http://localhost:8000/docs`.
+
+## 🧩 Arquitectura y Patrones de Diseño
+
+El siguiente diagrama UML ilustra la estructura modular del proyecto y cómo se aplican los patrones de diseño clave, como el **Builder** para la construcción de campañas y la separación de capas (Modelos, Servicios, API).
+
+```mermaid
+classDiagram
+    class CampaignBuilder {
+        +set_name(name)
+        +set_organization(org_id)
+        +select_template(name)
+        +set_target_group(ids)
+        +build() Campaign
+    }
+
+    class Campaign {
+        +int id
+        +str name
+        +int template_id
+        +list dispatches
+    }
+
+    class ServiceLayer {
+        <<Interface>>
+        +execute()
+    }
+
+    class SecurityModules {
+        <<Utility>>
+        +hash_captured_credential(pwd)
+    }
+
+    class API_Endpoints {
+        +create_campaign()
+        +capture_credentials()
+    }
+
+    CampaignBuilder ..> Campaign : Creates
+    API_Endpoints --> CampaignBuilder : Uses
+    API_Endpoints --> SecurityModules : Uses
+    Campaign "1" *-- "many" CampaignDispatch : Contains
+    CampaignDispatch "1" *-- "many" CampaignEvent : Logs
+```
+
+Este diseño asegura:
+
+- **Alta Cohesión**: Cada módulo tiene una responsabilidad clara (Builder construye, Modelos almacenan, API expone).
+- **Bajo Acoplamiento**: La lógica de negocio (Servicios) está separada de la capa de presentación (API).
+- **Extensibilidad**: Nuevos tipos de campañas o vectores de ataque pueden añadirse extendiendo los Enums y Servicios sin romper el código existente.

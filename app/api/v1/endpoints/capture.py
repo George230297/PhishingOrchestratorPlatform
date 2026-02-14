@@ -25,10 +25,17 @@ async def _log_event(
     os_fingerprint = "Detected from UA" 
     browser_fingerprint = "Detected from UA"
 
+    # Get real IP if behind proxy
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        ip_address = forwarded.split(",")[0].strip()
+    else:
+        ip_address = request.client.host
+
     event = CampaignEvent(
         dispatch_id=dispatch_id,
         event_type=event_type,
-        ip_address=request.client.host,
+        ip_address=ip_address,
         user_agent=user_agent,
         os_fingerprint=os_fingerprint,
         browser_fingerprint=browser_fingerprint
