@@ -128,6 +128,13 @@ Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull re
 
 ## ✨ Mejoras Recientes
 
+### Privacidad y Métricas (Anonymizer)
+
+Las campañas administradas con el flag `is_anonymous_reporting = True` ahora implementan un proceso de anonimización criptográficamente seguro:
+
+- **Hashes SHA-256 Salteados**: Las identidades de los objetivos (ID y Email) ya no se marcan ciegamente como "REDACTED". En su lugar, se transforman en hashes SHA-256 usando un _salt_ del sistema. Esto permite correlacionar métricas (ej. "el mismo usuario hizo clic 3 veces") sin revelar su PII (Información Personal Identificable).
+- **Minimización de Huella**: Eliminación preventiva de las cadenas de _User-Agent_ en reportes anónimos.
+
 ### Implementación del Patrón Builder para Campañas
 
 Se ha introducido la clase `CampaignBuilder` (`app/services/campaign_builder.py`) para facilitar la creación de campañas de phishing complejas de manera programática y segura.
